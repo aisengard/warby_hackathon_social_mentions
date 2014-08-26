@@ -2,7 +2,7 @@
 <script type="text/javascript">
 socket= new WebSocket('ws://127.0.0.1:8080/twitter');
 socket.onopen = function() {
-    socket.send("warby");
+    socket.send("obama");
 }
 socket.onmessage= function(s) {
     console.log(s.data);

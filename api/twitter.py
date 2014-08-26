@@ -1,8 +1,8 @@
 import requests
-import tornado.gen
 import tornado.httpclient
 import tornado.websocket
 
+from config import TWITTER as cfg
 from . import oauth
 
 stream_filter_url = "https://stream.twitter.com/1.1/statuses/filter.json"
@@ -19,10 +19,10 @@ class TwitterStreamHandler(tornado.websocket.WebSocketHandler):
 
     def filter_stream_generator(self, track):
         post_reqs = {'track': track}
-        oauth_token = oauth.generateOAuth(
+        oauth_token = oauth.generate_oauth(
             'POST', stream_filter_url, post_reqs,
-            'A09ADIWm5ObRfrzwlJTQ', 'JlFOVERuOvmX6tHOl9SKyVjwAiCKz0Kn7hXN4bnSnrk',
-            '226017037-BQx93ektXGfrQJ3ZXrvsJdsQTlKMcFlOHVeDtWGQ', 'ouTj9F4ryjsjeTeNC2Euew1UGiLERpKsaeo51eAonbeJu')
+            cfg.get('consumer_key'), cfg.get('consumer_secret'),
+            cfg.get('access_token'), cfg.get('access_token_secret'))
 
         s = requests.Session()
         headers = {"Authorization": oauth_token}

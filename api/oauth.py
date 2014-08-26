@@ -1,90 +1,68 @@
-import base64
+import binascii
+from hashlib import sha1
+import hmac
 import random
 import string
 import time
-from hashlib import sha1
-import hmac
-import binascii
-import json
-
-import urllib, urllib2
 from urllib import quote_plus
 
-# returns access_token
-def authRequest(consumerKey, consumerSecret, token_url):
-
-    bearerToken = consumerKey+":"+consumerSecret
-    b64BearerToken = base64.b64encode(bearerToken)
-
-    data = {}
-    headers = {}
-    headers['Authorization'] = 'Basic '+b64BearerToken
-    headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF8'
-
-    data['grant_type'] = 'client_credentials'
-    data = urllib.urlencode(data)
-
-    req = urllib2.Request(token_url, data, headers)
-    try:
-        response = urllib2.urlopen(req)
-    except urllib2.HTTPError as e:
-        print e
-        return
-
-    jsonResp = json.loads(response.read())
-    return jsonResp.get('access_token')
 
 #returns oAuth authorization header value
-def generateOAuth(method, url, params, consumerKey, consumerSecret, accessToken, accessTokenSecret):
+def generate_oauth(method, url, params, consumer_key, consumer_secret,
+                   access_token, access_token_secret):
 
-    oAuthNonce = "".join([random.choice(string.ascii_letters + string.digits) for _ in xrange(30)])
+    oauth_nonce = "".join([random.choice(string.ascii_letters + string.digits) for _ in xrange(30)])
 
-    authDict = {}
-    authDict['oauth_consumer_key'] = consumerKey
-    authDict['oauth_nonce'] = oAuthNonce
-    authDict['oauth_signature_method'] = "HMAC-SHA1"
-    authDict['oauth_token'] = accessToken
-    authDict['oauth_timestamp'] = str(int(time.time()))
-    authDict['oauth_version'] = "1.0"
+    auth_dict = {
+        'oauth_consumer_key': consumer_key,
+        'oauth_nonce': oauth_nonce,
+        'oauth_signature_method': 'HMAC-SHA1',
+        'oauth_token': access_token,
+        'oauth_timestamp': str(int(time.time())),
+        'oauth_version': '1.0'}
 
-    oAuthDict = dict(params.items()+authDict.items())
-    encodedParamString = generateParamString(oAuthDict)
+    oauth_dict = dict(params.items()+auth_dict.items())
+    encoded_param_string = generate_param_string(oauth_dict)
 
-    sigBaseString = method+"&"+quote_plus(url)+"&"+quote_plus(encodedParamString)
-    signingKey = quote_plus(consumerSecret)+"&"+quote_plus(accessTokenSecret)
+    sig_base_string = method+"&"+quote_plus(url)+"&"+quote_plus(encoded_param_string)
+    signing_key = quote_plus(consumer_secret)+"&"+quote_plus(access_token_secret)
 
-    hashed = hmac.new(signingKey, sigBaseString, sha1)
+    hashed = hmac.new(signing_key, sig_base_string, sha1)
+    oauth_signature = binascii.b2a_base64(hashed.digest())[:-1]
+    auth_dict['oauth_signature'] = oauth_signature
 
-    oAuthSignature = binascii.b2a_base64(hashed.digest())[:-1]
+    return generate_oauth_string(auth_dict)
 
-    authDict['oauth_signature'] = oAuthSignature
 
-    return generateOAuthString(authDict)
-
-def generateParamString(authDict):
-    paramString = ""
-    sortedKeyList = sorted(authDict)
+def generate_param_string(auth_dict):
+    param_string = ""
+    sorted_key_list = sorted(auth_dict)
     first = True
-    for key in sortedKeyList:
-        val = authDict[key]
-        tempString = ""
-        if first: first=False
-        else: tempString = "&"
-        tempString = tempString + quote_plus(key)+'='+quote_plus(val)
-        paramString = paramString + tempString
+    for key in sorted_key_list:
+        val = auth_dict[key]
+        temp_string = ""
+        if first:
+            first = False
+        else:
+            temp_string = "&"
+        temp_string = temp_string + quote_plus(key)+'='+quote_plus(val)
+        param_string += temp_string
 
-    return paramString
+    return param_string
 
-def generateOAuthString(authDict):
-    authString = "OAuth "
-    sortedKeyList = sorted(authDict)
+
+def generate_oauth_string(auth_dict):
+    auth_string = "OAuth "
+    sorted_key_list = sorted(auth_dict)
     first = True
-    for key in sortedKeyList:
-        val = authDict[key]
-        tempString = ""
-        if first: first=False
-        else: tempString = ", "
-        tempString = tempString + quote_plus(key)+'='+'"'+quote_plus(val)+'"'
-        authString = authString + tempString
+    for key in sorted_key_list:
+        val = auth_dict[key]
+        temp_string = ""
+        if first:
+            first = False
+        else:
+            temp_string = ", "
+        temp_string = temp_string + quote_plus(key)+'='+'"'+quote_plus(val)+'"'
+        auth_string += temp_string
 
-    return authString
+    return auth_string
