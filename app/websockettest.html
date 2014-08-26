@@ -21,7 +21,9 @@
     };
     socket.onmessage= function(s) {
         console.log(s.data);
-        $("#tweets").append(s.data);
+        data = eval("(" + s.data + ")");
+        var div = $("<div class='col-sm-3 content-card'><div class='stream-card'><div class='stream-card-content'><div class='stream-card-content'> " + data.text + "<div class='stream-card-content stream-header'><img src=" + data.user.profile_image_url + "/><h3>" + data.user.screen_name + "</h3></div></div></div></div>");
+        $('#tweets').prepend(div);
     };
   </script>
   <!-- header -->
@@ -41,76 +43,11 @@
     </div>
   </div>
 
-  <div id="tweets">
-
-  </div>
-
   <!-- body -->
 
   <div class="stream-content">
     <div class="container-fluid">
-      <div class="row">
-        <!-- stream -->
-        <div class="col-sm-3">
-          <div class="stream-card">
-            <div class="stream-card-content">
-              <p>Our next <a href="https://twitter.com/hashtag/warbyhackathon?src=hash">#warbyhackathon</a> has begun! </p>
-            </div>
-            <div class="stream-card-content stream-header">
-              <a href="#">
-                <img class="avatar" src="img/wp-social-media-logo.png">
-                <h3>Warby Parker</h3>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- stream -->
-        <div class="col-sm-3">
-          <div class="stream-card">
-            <div class="stream-card-content">
-              <p>Our next <a href="https://twitter.com/hashtag/warbyhackathon?src=hash">#warbyhackathon</a> has begun! </p>
-            </div>
-            <div class="stream-card-content stream-header">
-              <a href="#">
-                <img class="avatar" src="img/wp-social-media-logo.png">
-                <h3>Warby Parker</h3>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- stream -->
-        <div class="col-sm-3">
-          <div class="stream-card">
-            <div class="stream-card-content">
-              <p>Our next <a href="https://twitter.com/hashtag/warbyhackathon?src=hash">#warbyhackathon</a> has begun! </p>
-            </div>
-            <div class="stream-card-content stream-header">
-              <a href="#">
-                <img class="avatar" src="img/wp-social-media-logo.png">
-                <h3>Warby Parker</h3>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <!-- stream -->
-        <div class="col-sm-3">
-          <div class="stream-card">
-            <div class="stream-card-content">
-              <p>Our next <a href="https://twitter.com/hashtag/warbyhackathon?src=hash">#warbyhackathon</a> has begun! </p>
-            </div>
-            <div class="stream-card-content stream-header">
-              <a href="#">
-                <img class="avatar" src="img/wp-social-media-logo.png">
-                <h3>Warby Parker</h3>
-              </a>
-            </div>
-          </div>
-        </div>
-
-
+      <div id="tweets" class="row">
       </div>
     </div>
   </div>

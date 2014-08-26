@@ -83,6 +83,10 @@
 	padding-top: 15px;
 }
 
+.content-card {
+	min-height: 275px;
+}
+
 .stream-card {
 	background: white;
 	border: 1px solid #e1e8ed;
