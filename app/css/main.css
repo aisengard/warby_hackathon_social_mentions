@@ -84,7 +84,7 @@
 }
 
 .content-card {
-	min-height: 275px;
+	min-height: 200px;
 }
 
 .stream-card {
@@ -107,7 +107,7 @@
 	color: #45555f;
 	font-size: 14px;
 	margin: 0;
-	min-height: 265px;
+	min-height: 100px;
 }
 
 .stream-card-content p a {
@@ -116,6 +116,9 @@
 
 .stream-header {
 	border-top: 1px solid #e1e8ed;
+	float: left;
+	width: 100%;
+	padding-top: 10px;
 }
 
 .stream-header a {
@@ -124,7 +127,7 @@
 
 .stream-header .avatar {
 	float: left;
-	margin-left: -5px;
+	margin-left: 0;
 }
 
 .avatar {
@@ -135,7 +138,7 @@
 
 .stream-header h3 {
 	font-weight: normal;
-	color: #45555f;
+	color: #e1e8ed;
 	font-family: "Helvetica Neue",Arial,sans-serif;
 	font-size: 16px;
 	width: 65%;
