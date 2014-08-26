@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]> <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]> <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+  <script type="text/javascript">
+    socket= new WebSocket('ws://127.0.0.1:8080/twitter');
+    socket.onopen = function() {
+        socket.send("obama");
+    };
+    socket.onmessage= function(s) {
+        console.log(s.data);
+    };
+  </script>
+</head>
+<body>
+
+  <!-- header -->
+
+  <div class="header-container">
+    <div id="header">
+      <div class="header-wrapper">
+        <div class="branding">
+          <div class="logo">
+            <strong>Warby Parker</strong>
+            <a id="top-nav-logo" class="js-ga-click" data-ga-category="top nav" data-ga-action="click" data-ga-label="logo" itemprop="url" href="//www-stage.warbyparker.com/" title="Warby Parker">
+                <img itemprop="logo" src="img/logo.png" alt="Warby Parker">
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- body -->
+
+  <div class="stream-content">
+    <div class="container-fluid">
+      <div class="row">
+        <!-- stream -->
+        <div class="col-sm-3">
+          <div class="stream-card">
+            <div class="stream-card-content">
+              <p>Our next <a href="https://twitter.com/hashtag/warbyhackathon?src=hash">#warbyhackathon</a> has begun! </p>
+            </div>
+            <div class="stream-card-content stream-header">
+              <a href="#">
+                <img class="avatar" src="img/wp-social-media-logo.png">
+                <h3>Warby Parker</h3>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+  <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.0.min.js"><\/script>')</script>
+  <script src="js/vendor/bootstrap.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
