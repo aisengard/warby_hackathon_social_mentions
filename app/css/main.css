@@ -75,6 +75,11 @@
 	position: relative;
 }
 
+.search-bar {
+    padding-top: 10px;
+    text-align: center;
+    line-height: 30px;
+}
 /* BODY */
 
 .stream-content {

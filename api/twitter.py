@@ -1,4 +1,6 @@
+import json
 import requests
+import time
 import tornado.httpclient
 import tornado.websocket
 
@@ -14,8 +16,16 @@ class TwitterStreamHandler(tornado.websocket.WebSocketHandler):
         return True
 
     def on_message(self, message):
-        for status in self.filter_stream_generator(message):
-            self.write_message(status)
+        msg = json.loads(message)
+        if msg.get('change_keyword'):
+            if hasattr(self, 'session'):
+                self.session.close()
+            self.status_generator = self.filter_stream_generator(msg.get('keyword_filter'))
+        if hasattr(self, 'status_generator'):
+            self.write_message(self.status_generator.next())
+        else:
+            self.status_generator = self.filter_stream_generator(msg.get('keyword_filter'))
+            self.write_message(self.status_generator.next())
 
     def filter_stream_generator(self, track):
         post_reqs = {'track': track}
@@ -24,11 +34,11 @@ class TwitterStreamHandler(tornado.websocket.WebSocketHandler):
             cfg.get('consumer_key'), cfg.get('consumer_secret'),
             cfg.get('access_token'), cfg.get('access_token_secret'))
 
-        s = requests.Session()
+        self.session = requests.Session()
         headers = {"Authorization": oauth_token}
         req = requests.Request("POST", stream_filter_url, headers=headers, data=post_reqs).prepare()
 
-        resp = s.send(req, stream=True)
+        resp = self.session.send(req, stream=True)
 
         for status in resp.iter_lines():
             if status:
